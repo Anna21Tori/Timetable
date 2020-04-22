@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <!-- JQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <!--STYLE-->
+    <link rel="stylesheet" href="style/style.css">
+
+    <script>
+
+        var data;
+
+        function readTextFile(file, callback) {
+            var rawFile = new XMLHttpRequest();
+            rawFile.overrideMimeType("application/json");
+            rawFile.open("GET", file, true);
+            rawFile.onreadystatechange = function () {
+                if (rawFile.readyState === 4 && rawFile.status == "200") {
+                    callback(rawFile.responseText);
+                }
+            }
+            rawFile.send(null);
+        }
+
+
+        readTextFile("data.json", function (text) {
+            data = JSON.parse(text);
+            console.log(data);
+            timeTable();
+        });
+
+        function timeTable() {
+            for (var i = 0; i < data.zajecia.length; i++) {
+                var el = data.zajecia[i]
+                var tr = document.createElement("tr")
+                tr.classList.add("oneClass")
+                var term = document.createElement("td")
+                var date = document.createElement("td")
+                var subject = document.createElement("td")
+                var teacher = document.createElement("td")
+                var type = document.createElement("td")
+                var classes = document.createElement("td")
+                term.innerHTML = el.termin
+                date.innerHTML = el.dzien + " " + el.odGodz + "-" + el.doGodz
+                subject.innerHTML = el.przedmiot.pl
+                if (el.nauczyciel.text)
+                    teacher.innerHTML = el.nauczyciel.text
+                type.innerHTML = el.typ
+                classes.innerHTML = el.sala;
+                tr.appendChild(term)
+                tr.appendChild(date)
+                tr.appendChild(subject)
+                tr.appendChild(teacher)
+                tr.appendChild(type)
+                tr.appendChild(classes)
+                document.getElementById("time-table").appendChild(tr);
+            }
+
+            $(document).ready(function () {
+
+                $(".oneClass td").css("border-bottom", "1px solid lightgray")
+                $(".oneClass, th").css("border-bottom", "1px solid lightgray")
+                $(".oneClass td").click(function () { 
+                    var i = $(this).parent().index() - 1; 
+                    console.log(data.zajecia[i].przedmiot.pl)
+                    if (data.zajecia[i].przedmiot.pl == $(this).text()) 
+                        $(this).text(data.zajecia[i].przedmiot.en);
+                    else if (data.zajecia[i].przedmiot.en == $(this).text()) 
+                        $(this).text(data.zajecia[i].przedmiot.pl);
+
+                })
+
+                $(".oneClass").mouseover(function () { 
+                    var i = $(this).index() - 1; 
+                    if (data.zajecia[i].kolokwium.bool == true) 
+                        alert(data.zajecia[i].przedmiot.pl + ": " + data.zajecia[i].kolokwium.opis)
+
+                })
+
+                for (var i = 0; i < data.zajecia.length - 1; i++) { 
+                    if (data.zajecia[i].kolokwium.bool == true)
+                        $("#time-table tr").eq(i + 1).css("color", "red");
+                }
+            }
+
+    </script>
+</head>
+<body>
+<div id="main">
+    <div id="header">
+        <table id="table-infp">
+            <tr>
+                <td>Imię:</td>
+                <td>xxx</td>
+            </tr>
+            <tr>
+                <td>Nazwisko:</td>
+                <td>yyy</td>
+            </tr>
+            <tr>
+                <td>Numer grupy:</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Kierunek:</td>
+                <td></td>
+            </tr>
+        </table>
+    </div>
+
+    <div id="content">
+        <table id="time-table">
+            <tr class="head-tab">
+                <th>Termin</th>
+                <th>Dzień, Godzina</th>
+                <th>Przedmiot</th>
+                <th>Typ</th>
+                <th>Nauczyciel</th>
+                <th>Sala</th>
+            </tr>
+        </table>
+    </div>
+</div>
+</body>
+</html>
+            

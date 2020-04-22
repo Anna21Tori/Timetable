@@ -1,0 +1,35 @@
+#main {
+    width: 100%;
+    overflow: hidden;
+}
+
+#header {
+    width: 20%;
+    float: left;
+    position: fixed;
+}
+
+.table-info {
+    border: none;
+}
+
+td {
+    padding: 20px;
+}
+
+#content {
+    width: 77%;
+    float: right;
+    height: 100%;
+}
+
+#content > p {
+    text-align: center;
+}
+
+#time-table {
+    border-left: 2px solid lightgray;
+    padding: 10px;
+    text-align: center;
+    float: right;
+}
